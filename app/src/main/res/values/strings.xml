@@ -56,5 +56,12 @@
     <string name="version">Versión</string>
     <string name="log">Log</string>
     <string name="developer">Developed by:</string>
+    <string name="mesaage_on_back">No se puede volver atras, los datos ya fueron guardado, para modificar póngase en contácto con el administrador</string>
+    <string name="text_loading">Cargando...</string>
+    <string name="message_no_save_data">No se pudo guardar la información intentelo nuevamente</string>
+    <string name="message_save">Guardar</string>
+    <string name="message_save_information">Está seguro de guardar todas las encuestas</string>
+    <string name="message_login_error">No se pudo iniciar sessión</string>
+    <string name="message_login_success">Inicio de sesión correctamente</string>
     <!-- Log Versiones  -->
 </resources>

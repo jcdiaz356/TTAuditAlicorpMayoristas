@@ -11,7 +11,7 @@ import android.util.Log;
 
 import com.dataservicios.ttauditalicorpmayoristas.Model.PhoneDetail;
 import com.dataservicios.ttauditalicorpmayoristas.Model.User;
-import com.dataservicios.ttauditalicorpmayoristas.SQLite.DatabaseHelper;
+import com.dataservicios.ttauditalicorpmayoristas.Repositories.UserRepo;
 import com.dataservicios.ttauditalicorpmayoristas.app.AppController;
 
 import com.dataservicios.ttauditalicorpmayoristas.util.AuditAlicorp;
@@ -40,7 +40,7 @@ public class MonitoGPSServices extends Service {
     private PhoneDetail m;
 
     private AppController application;
-    private DatabaseHelper db;
+    private UserRepo userRepo;
 
     GPSTracker gpsTracker ;
 
@@ -61,7 +61,7 @@ public class MonitoGPSServices extends Service {
 
         gpsTracker = new GPSTracker(context);
         m = new PhoneDetail();
-        db = new DatabaseHelper(getApplicationContext());
+        userRepo = new UserRepo(getApplicationContext());
 
         Log.d(TAG, "onCreated");
     }
@@ -131,9 +131,9 @@ public class MonitoGPSServices extends Service {
 
 
                                 int user_id = 0;
-                                if(db.getUserCount() > 0) {
+                                if(userRepo.getUserCount() > 0) {
                                     //User users = new User();
-                                    List<User> usersList = db.getAllUser();
+                                    List<User> usersList = userRepo.getAllUser();
                                     if(usersList.size()>0) {
                                         User users = new User();
                                         users=usersList.get(0);
@@ -160,7 +160,6 @@ public class MonitoGPSServices extends Service {
                         } else {
                             Log.i(TAG," No internet connection" );
                         }
-
 
                     } else {
                         Log.i(TAG,"No se envía fuera del horario" + String.valueOf(hour));

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -31,6 +32,7 @@ import com.dataservicios.ttauditalicorpmayoristas.AditoriaAlicorp.PresenciaProdu
 import com.dataservicios.ttauditalicorpmayoristas.Model.Audit;
 import com.dataservicios.ttauditalicorpmayoristas.SQLite.DatabaseHelper;
 import com.dataservicios.ttauditalicorpmayoristas.app.AppController;
+import com.dataservicios.ttauditalicorpmayoristas.util.AuditAlicorp;
 import com.dataservicios.ttauditalicorpmayoristas.util.GPSTracker;
 import com.dataservicios.ttauditalicorpmayoristas.util.GlobalConstant;
 import com.dataservicios.ttauditalicorpmayoristas.util.SessionManager;
@@ -50,6 +52,7 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -83,6 +86,10 @@ public class DetallePdv extends FragmentActivity {
 
 
     private DatabaseHelper db;
+
+    Audit mAudit ;
+    GPSTracker gpsTracker;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -115,6 +122,7 @@ public class DetallePdv extends FragmentActivity {
         id_user = user.get(SessionManager.KEY_ID_USER);
 
         db = new DatabaseHelper(getApplicationContext());
+        gpsTracker = new GPSTracker(MyActivity);
 
         pDialog = new ProgressDialog(this);
         pDialog.setMessage("Cargando...");
@@ -122,9 +130,76 @@ public class DetallePdv extends FragmentActivity {
 
 
 
+//        btCerrarAudit.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                AlertDialog.Builder builder = new AlertDialog.Builder(MyActivity);
+//                builder.setTitle("Guardar Encuesta");
+//                builder.setMessage("Está seguro de cerrar la auditoría: ");
+//                builder.setPositiveButton("Si", new DialogInterface.OnClickListener()
+//
+//                {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which)
+//                    {
+//                        Calendar c = Calendar.getInstance();
+//                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//                        String strDate = sdf.format(c.getTime());
+//                        GlobalConstant.fin = strDate;
+//
+//                        JSONObject paramsCloseAudit = new JSONObject();
+//                        try {
+//                            GPSTracker gpsTracker = new GPSTracker(MyActivity);
+//
+//
+//                            //paramsCloseAudit.put("latitud_close", lat);
+//                            paramsCloseAudit.put("latitud_close",  String.valueOf(gpsTracker.getLatitude()));
+//                            //paramsCloseAudit.put("longitud_close", lon);
+//                            paramsCloseAudit.put("longitud_close", String.valueOf(gpsTracker.getLongitude()));
+//                            paramsCloseAudit.put("latitud_open", GlobalConstant.latitude_open);
+//                            paramsCloseAudit.put("longitud_open",  GlobalConstant.latitude_open);
+//                            paramsCloseAudit.put("tiempo_inicio",  GlobalConstant.inicio);
+//                            paramsCloseAudit.put("tiempo_fin",  GlobalConstant.fin);
+//                            paramsCloseAudit.put("tduser", id_user);
+//                            paramsCloseAudit.put("id", idPDV);
+//                            paramsCloseAudit.put("idruta", IdRuta);
+//                            paramsCloseAudit.put("company_id", GlobalConstant.company_id);
+//
+//                            insertaTiemporAuditoria(paramsCloseAudit);
+//
+//
+//                            finish();
+//
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                        dialog.dismiss();
+//
+//                    }
+//                });
+//
+//                builder.setNegativeButton("No", new DialogInterface.OnClickListener()
+//                {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which)
+//                    {
+//                        dialog.dismiss();
+//                    }
+//                });
+//
+//                builder.show();
+//                builder.setCancelable(false);
+//
+//
+//            }
+//        });
+
+
         btCerrarAudit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(MyActivity);
                 builder.setTitle("Guardar Encuesta");
                 builder.setMessage("Está seguro de cerrar la auditoría: ");
@@ -139,32 +214,8 @@ public class DetallePdv extends FragmentActivity {
                         String strDate = sdf.format(c.getTime());
                         GlobalConstant.fin = strDate;
 
-                        JSONObject paramsCloseAudit = new JSONObject();
-                        try {
-                            GPSTracker gpsTracker = new GPSTracker(MyActivity);
+                        new loadPoll().execute();
 
-
-                            //paramsCloseAudit.put("latitud_close", lat);
-                            paramsCloseAudit.put("latitud_close",  String.valueOf(gpsTracker.getLatitude()));
-                            //paramsCloseAudit.put("longitud_close", lon);
-                            paramsCloseAudit.put("longitud_close", String.valueOf(gpsTracker.getLongitude()));
-                            paramsCloseAudit.put("latitud_open", GlobalConstant.latitude_open);
-                            paramsCloseAudit.put("longitud_open",  GlobalConstant.latitude_open);
-                            paramsCloseAudit.put("tiempo_inicio",  GlobalConstant.inicio);
-                            paramsCloseAudit.put("tiempo_fin",  GlobalConstant.fin);
-                            paramsCloseAudit.put("tduser", id_user);
-                            paramsCloseAudit.put("id", idPDV);
-                            paramsCloseAudit.put("idruta", IdRuta);
-                            paramsCloseAudit.put("company_id", GlobalConstant.company_id);
-
-                            insertaTiemporAuditoria(paramsCloseAudit);
-
-
-                            finish();
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
                         dialog.dismiss();
 
                     }
@@ -185,9 +236,6 @@ public class DetallePdv extends FragmentActivity {
 
             }
         });
-
-
-
 
 
         linearLayout = (ViewGroup) findViewById(R.id.lyControles);
@@ -596,6 +644,60 @@ public class DetallePdv extends FragmentActivity {
 
 
     }
+
+
+    class loadPoll extends AsyncTask<Void , Integer , Boolean> {
+        /**
+         * Antes de comenzar en el hilo determinado, Mostrar progresión
+         * */
+        boolean failure = false;
+        @Override
+        protected void onPreExecute() {
+            //tvCargando.setText("Cargando Product...");
+            pDialog.show();
+            super.onPreExecute();
+        }
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // TODO Auto-generated method stub
+
+
+
+            String time_close = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss").format(new Date());
+            mAudit = new Audit();
+            mAudit.setCompany_id(GlobalConstant.company_id);
+            mAudit.setStore_id(idPDV);
+            mAudit.setId(0);
+            mAudit.setRoute_id(IdRuta);
+            mAudit.setUser_id(Integer.valueOf(id_user));
+            mAudit.setLatitude_close(String.valueOf(gpsTracker.getLatitude()));
+            mAudit.setLongitude_close(String.valueOf(gpsTracker.getLongitude()));
+            mAudit.setLatitude_open(String.valueOf(GlobalConstant.latitude_open));
+            mAudit.setLongitude_open(String.valueOf(GlobalConstant.longitude_open));
+            mAudit.setTime_open(GlobalConstant.inicio);
+            mAudit.setTime_close(time_close);
+
+
+            if(!AuditAlicorp.closeAuditRoadAll(mAudit)) return false;
+
+
+            return true;
+        }
+        /**
+         * After completing background task Dismiss the progress dialog
+         * **/
+        protected void onPostExecute(Boolean result) {
+            // dismiss the dialog once product deleted
+
+            if (result){
+                finish();
+            } else {
+                Toast.makeText(MyActivity , "No se pudo guardar la información intentelo nuevamente", Toast.LENGTH_LONG).show();
+            }
+            hidepDialog();
+        }
+    }
+
 
 
     @Override

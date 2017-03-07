@@ -2,9 +2,11 @@ package com.dataservicios.ttauditalicorpmayoristas;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -13,7 +15,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.dataservicios.ttauditalicorpmayoristas.Model.User;
+import com.dataservicios.ttauditalicorpmayoristas.Repositories.UserRepo;
 import com.dataservicios.ttauditalicorpmayoristas.SQLite.DatabaseHelper;
+import com.dataservicios.ttauditalicorpmayoristas.util.AuditAlicorp;
 import com.dataservicios.ttauditalicorpmayoristas.util.Connectivity;
 import com.dataservicios.ttauditalicorpmayoristas.util.GlobalConstant;
 import com.dataservicios.ttauditalicorpmayoristas.util.JSONParser;
@@ -32,56 +36,54 @@ import java.util.List;
  * Created by usuario on 05/11/2014.
  */
 public class LoginActivity extends Activity implements View.OnClickListener {
-    Button ingresar, btLlamar, btUbicar;
-    EditText usuario,contrasena;
-    private DatabaseHelper db;
-    // Progress Dialog
+    private Button ingresar;
+    private EditText etUsuario,etPassword;
+    //private DatabaseHelper db;
+    private UserRepo userRepo ;
     private ProgressDialog pDialog;
-    Activity MyActivity = (Activity) this;
-    // Session Manager Class
-    SessionManager session;
-    // JSON parser class
-    JSONParser jsonParser = new JSONParser();
+    private Activity myActivity = (Activity) this;
+    private SessionManager session;
+    private JSONParser jsonParser = new JSONParser();
+    private String userLogin, passwordLogin, simSNLogin;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         ingresar = (Button) findViewById(R.id.btIngresar);
-        usuario =   (EditText) findViewById(R.id.etUsuario);
-        contrasena = (EditText) findViewById(R.id.etContrasena);
+        etUsuario =   (EditText) findViewById(R.id.etUsuario);
+        etPassword = (EditText) findViewById(R.id.etContrasena);
 
-        contrasena.setText("123456");
-
+        etPassword.setText("123456");
 
         ingresar.setOnClickListener(this);
-        // Session Manager
         session = new SessionManager(getApplicationContext());
+        userRepo = new UserRepo(myActivity);
 
-
-        if(Connectivity.isConnected(MyActivity)) {
-            if (Connectivity.isConnectedFast(MyActivity)) {
-                Toast.makeText(MyActivity, "Conexion a internet rapida", Toast.LENGTH_SHORT).show();
+        if(Connectivity.isConnected(myActivity)) {
+            if (Connectivity.isConnectedFast(myActivity)) {
+                Toast.makeText(myActivity, "Conexion a internet rapida", Toast.LENGTH_SHORT).show();
             }else {
-                Toast.makeText(MyActivity, "Conexion a internet lenta", Toast.LENGTH_SHORT).show();
+                Toast.makeText(myActivity, "Conexion a internet lenta", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(MyActivity, "No hay conexión a internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(myActivity, "No hay conexión a internet", Toast.LENGTH_SHORT).show();
         }
 
-        db = new DatabaseHelper(getApplicationContext());
-        if(db.getUserCount() > 0) {
+        //db = new DatabaseHelper(getApplicationContext());
+        if(userRepo.getUserCount() > 0) {
             //User users = new User();
-            List<User> usersList = db.getAllUser();
+            List<User> usersList = userRepo.getAllUser();
             if(usersList.size()>0) {
                 User users = new User();
                 users=usersList.get(0);
-                usuario.setText(users.getEmail());
-                //contrasena.setText(users.getPassword());
+                etUsuario.setText(users.getEmail());
+
             }
         }
     }
-
 
 
     @Override
@@ -89,25 +91,31 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.btIngresar:
 
-                if (usuario.getText().toString().trim().equals("") )
+                if (etUsuario.getText().toString().trim().equals("") )
                 {
-                     Toast toast = Toast.makeText(this, "Ingrese un Usuario", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(this, "Ingrese un Usuario", Toast.LENGTH_SHORT);
                     toast.show();
-                     usuario.requestFocus();
-                }else if (contrasena.getText().toString().trim().equals("")) {
+                    etUsuario.requestFocus();
+                }else if (etPassword.getText().toString().trim().equals("")) {
                     Toast toast = Toast.makeText(this, "Ingrese una Contraseña ", Toast.LENGTH_SHORT);
                     toast.show();
-                    contrasena.requestFocus();
+                    etPassword.requestFocus();
                 }else {
-                            new AttemptLogin().execute();
 
+                    TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+                    tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                    ///String imei = tm.getDeviceId();
+                    //String imei1 = tm.getLine1Number();
+                    simSNLogin = tm.getSimSerialNumber();
+                    userLogin = etUsuario.getText().toString();
+                    passwordLogin = etPassword.getText().toString();
+                    new AttemptLogin().execute();
                 }
                 break;
-
         }
     }
 
-    class AttemptLogin extends AsyncTask<String, String, String> {
+    class AttemptLogin extends AsyncTask<Void, String, User> {
 
         /**
          * Antes de comenzar en el hilo determinado, Mostrar progresión
@@ -118,89 +126,44 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(LoginActivity.this);
-            pDialog.setMessage("Iniciando Sesión...");
+            pDialog.setMessage(getString(R.string.text_loading));
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
             pDialog.show();
         }
 
         @Override
-        protected String doInBackground(String... args) {
+        protected User doInBackground(Void... params) {
             // TODO Auto-generated method stub
-            // Comprobando si es exito
-            int success;
-            String username = usuario.getText().toString();
-            String password = contrasena.getText().toString();
-            String userFullName ="";
-            int id_user ;
-            try {
-                // Construyendo los parametros
-                List<NameValuePair> params = new ArrayList<NameValuePair>();
-                params.add(new BasicNameValuePair("username", username));
-                params.add(new BasicNameValuePair("password", password));
 
-                Log.d("request!", "starting");
-                // getting product details by making HTTP request
-                //JSONObject json = jsonParser.makeHttpRequest(GlobalConstant.dominio + "/loginUser" ,"POST", params);
-                JSONObject json = jsonParser.makeHttpRequest(GlobalConstant.dominio + "/loginMovil" ,"POST", params);
+            User user = new User();
+            user = AuditAlicorp.userLogin(userLogin, passwordLogin, simSNLogin);
+            return user;
 
-                if (json != null) {
-                    // check your log for json response
-                    Log.d("Login attempt", json.toString());
-
-                    // json success, tag que retorna el json
-                    success = json.getInt("success");
-                    id_user = json.getInt("id");
-                    userFullName= json.getString("fullname");
-                    if (success == 1) {
-                        Log.d("Login Successful!", json.toString());
-                        db.deleteAllUser();
-                        User users = new User();
-                        users.setId(id_user);
-
-                        users.setEmail(usuario.getText().toString());
-                        users.setName(userFullName);
-                        users.setPassword(contrasena.getText().toString());
-                        db.createUser(users);
-                        // Creating user login session
-                        // For testing i am stroing name, email as follow
-                        // Use user real data
-                        session.createLoginSession(users.getName().toString(), users.getEmail(), String.valueOf(id_user));
-                        Intent i = new Intent(LoginActivity.this, PanelAdmin.class);
-                        //Enviando los datos usando Bundle a otro activity
-                        Bundle bolsa = new Bundle();
-                        bolsa.putString("NOMBRE", username);
-                        i.putExtras(bolsa);
-                        finish();
-                        startActivity(i);
-
-                        return json.getString("message");
-                    }else{
-                        Log.d("Login Failure!", json.getString("message"));
-
-                        return json.getString("message");
-                    }
-                }
-
-            } catch (JSONException e) {
-                //Toast.makeText(LoginActivity.this, "No se pudo conectar", Toast.LENGTH_LONG).show();
-                e.printStackTrace();
-            }
-            return null;
         }
         /**
          * After completing background task Dismiss the progress dialog
          * **/
-        protected void onPostExecute(String file_url) {
+        protected void onPostExecute(User user) {
             // dismiss the dialog once product deleted
-            pDialog.dismiss();
 
-            if (file_url != null){
-                Toast.makeText(LoginActivity.this, file_url, Toast.LENGTH_LONG).show();
+            if( user.getId() == 0) {
+
+                Toast.makeText(myActivity, R.string.message_login_error, Toast.LENGTH_LONG).show();
             } else {
 
-                Toast.makeText(LoginActivity.this, "No se pudo obtener información del servidor", Toast.LENGTH_LONG).show();
+                userRepo.deleteAllUser();
+                userRepo.createUser(user);
+                session.createLoginSession(user.getName().toString(), user.getEmail(), String.valueOf(user.getId()));
+                Intent i = new Intent(LoginActivity.this, PanelAdmin.class);
+                startActivity(i);
+                finish();
+
+                Toast.makeText(myActivity, R.string.message_login_success, Toast.LENGTH_LONG).show();
             }
+
+            pDialog.dismiss();
+
 
         }
 

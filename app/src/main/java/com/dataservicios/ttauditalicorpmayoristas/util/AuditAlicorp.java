@@ -11,6 +11,7 @@ import com.dataservicios.ttauditalicorpmayoristas.Model.Media;
 import com.dataservicios.ttauditalicorpmayoristas.Model.Pdv;
 import com.dataservicios.ttauditalicorpmayoristas.Model.PhoneDetail;
 import com.dataservicios.ttauditalicorpmayoristas.Model.PollDetail;
+import com.dataservicios.ttauditalicorpmayoristas.Model.User;
 
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.ContentBody;
@@ -537,6 +538,45 @@ public class AuditAlicorp {
         }
         return true;
 
+    }
+
+    public static User userLogin(String userName, String password , String imei){
+
+        int success ;
+        User user = new User();
+        try {
+
+            HashMap<String, String> params = new HashMap<>();
+
+            params.put("username", String.valueOf(userName));
+            params.put("password", String.valueOf(password));
+            params.put("imei", String.valueOf(imei));
+
+            JSONParserX jsonParser = new JSONParserX();
+            // getting product details by making HTTP request
+            JSONObject json = jsonParser.makeHttpRequest(GlobalConstant.dominio + "/loginMovil" ,"POST", params);
+            // check your log for json response
+            Log.d("Login attempt", json.toString());
+            // json success, tag que retorna el json
+            if (json == null) {
+                Log.d("JSON result", "Está en nulo");
+            } else{
+                success = json.getInt("success");
+                if (success == 1) {
+                    user.setId(json.getInt("id"));
+                    user.setEmail(userName);
+                    user.setName(json.getString("fullname"));
+                    user.setPassword(password);
+                }else{
+                    Log.d(LOG_TAG, "No se pudo iniciar sesión");
+                    //return false;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // return false;
+        }
+        return  user;
     }
 
 }

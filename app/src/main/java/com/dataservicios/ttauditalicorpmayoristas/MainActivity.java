@@ -14,6 +14,7 @@ import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.dataservicios.ttauditalicorpmayoristas.Repositories.UserRepo;
 import com.dataservicios.ttauditalicorpmayoristas.SQLite.DatabaseHelper;
 import com.dataservicios.ttauditalicorpmayoristas.util.ConexionInternet;
 
@@ -37,6 +38,7 @@ public class MainActivity extends Activity {
     //private JSONParser jsonParser;
     // Database Helper
    private DatabaseHelper db;
+    private UserRepo userRepo ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class MainActivity extends Activity {
         tv_Version = (TextView) findViewById(R.id.tvVersion);
 
         db = new DatabaseHelper(getApplicationContext());
+        userRepo = new UserRepo(getApplicationContext()) ;
 
         PackageInfo pckInfo ;
         try {
@@ -72,7 +75,7 @@ public class MainActivity extends Activity {
 
 
         }else{
-            db.deleteAllUser();
+            userRepo.deleteAllUser();
             db.deleteAllPublicity();
             db.deleteAllAudits();
             db.deleteAllPresensePublicity();
