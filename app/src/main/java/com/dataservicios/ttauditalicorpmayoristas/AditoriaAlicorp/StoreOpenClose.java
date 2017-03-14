@@ -118,10 +118,14 @@ public class StoreOpenClose extends Activity {
 
 
         audit_id = GlobalConstant.audit_id[3]; //Inicio de auditoría Alicorp
-        poll_id = GlobalConstant.poll_id[5] ;// 5 "Se encuentra Abierto el punto?"
-        poll_id2 = GlobalConstant.poll_id[6] ;// 6 "¿Cliente permitió tomar información?"
 
-        //poll_id = 72 , solo para exhibiciones de bayer, directo de la base de datos
+
+//        poll_id = GlobalConstant.poll_id[5] ;// 5 "Se encuentra Abierto el punto?"
+//        poll_id2 = GlobalConstant.poll_id[6] ;// 6 "¿Cliente permitió tomar información?"
+
+
+        poll_id = GlobalConstant.poll_id[6] ;// 5 "Se encuentra Abierto el punto?"
+        poll_id2 = GlobalConstant.poll_id[7] ;// 6 "¿Cliente permitió tomar información?"
 
         pDialog = new ProgressDialog(MyActivity);
         pDialog.setMessage("Cargando...");

@@ -64,7 +64,8 @@ public class FirmaCargo extends Activity {
         HashMap<String, String> user = session.getUserDetails();
 
         user_id = Integer.valueOf(user.get(SessionManager.KEY_ID_USER)) ;
-        poll_id = GlobalConstant.poll_id[7];
+        //poll_id = GlobalConstant.poll_id[7];
+        poll_id = GlobalConstant.poll_id[5];
         Bundle bundle = getIntent().getExtras();
         store_id = bundle.getInt("store_id");
         rout_id =  bundle.getInt("rout_id");

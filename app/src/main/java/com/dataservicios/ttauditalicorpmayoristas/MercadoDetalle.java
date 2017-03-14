@@ -160,11 +160,6 @@ public class MercadoDetalle extends FragmentActivity {
         });
 
 
-
-
-
-
-
         linearLayout = (ViewGroup) findViewById(R.id.lyControles);
 
         params = new JSONObject();
