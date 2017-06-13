@@ -124,8 +124,8 @@ public class StoreOpenClose extends Activity {
 //        poll_id2 = GlobalConstant.poll_id[6] ;// 6 "¿Cliente permitió tomar información?"
 
 
-        poll_id = GlobalConstant.poll_id[6] ;// 5 "Se encuentra Abierto el punto?"
-        poll_id2 = GlobalConstant.poll_id[7] ;// 6 "¿Cliente permitió tomar información?"
+        poll_id = GlobalConstant.poll_id[0] ;// 5 "Se encuentra Abierto el punto?"
+        poll_id2 = GlobalConstant.poll_id[1] ;// 6 "¿Cliente permitió tomar información?"
 
         pDialog = new ProgressDialog(MyActivity);
         pDialog.setMessage("Cargando...");
@@ -431,7 +431,7 @@ public class StoreOpenClose extends Activity {
                         Intent intent;
                         //intent = new Intent(MyActivity, Product.class);
                         //intent = new Intent(MyActivity, TipoDex.class);
-                        intent = new Intent(MyActivity, DetallePdv.class);
+                        intent = new Intent(MyActivity, AceptoPremio.class);
                         intent.putExtras(argRuta);
                         startActivity(intent);
                         finish();

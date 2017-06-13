@@ -31,12 +31,14 @@ public class PdvsAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
     private List<Pdv> pdvItems;
+    private int idRuta;
     //final Pdv m ;
     ImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
-    public PdvsAdapter(Activity activity, List<Pdv> rutaItems) {
+    public PdvsAdapter(Activity activity, List<Pdv> rutaItems, int idRuta) {
         this.activity = activity;
         this.pdvItems = rutaItems;
+        this.idRuta = idRuta;
     }
 
     @Override
@@ -107,16 +109,16 @@ public class PdvsAdapter extends BaseAdapter {
 
         }
 
-        if (m.getTypeBodega().equals("CONGLOMERADO") || m.getTypeBodega().equals("6D")  ){
-
-            bt_do.setVisibility(View.VISIBLE);
-            bt_do.setEnabled(true);
-
-        } else {
-            bt_do.setVisibility(View.INVISIBLE);
-            bt_do.setEnabled(false);
-        }
-
+//        if (m.getTypeBodega().equals("CONGLOMERADO") || m.getTypeBodega().equals("6D")  ){
+//
+//            bt_do.setVisibility(View.VISIBLE);
+//            bt_do.setEnabled(true);
+//
+//        } else {
+//            bt_do.setVisibility(View.INVISIBLE);
+//            bt_do.setEnabled(false);
+//        }
+        bt_do.setVisibility(View.INVISIBLE);
 
         bt_do.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,6 +127,7 @@ public class PdvsAdapter extends BaseAdapter {
                 Bundle argRuta = new Bundle();
                 argRuta.clear();
                 argRuta.putInt("store_id", m.getId());
+                argRuta.putInt("idRuta",idRuta);
 
                 Intent intent;
                 intent = new Intent(parent.getContext(), AceptoPremio.class);

@@ -7,8 +7,8 @@ android {
         applicationId "com.dataservicios.ttauditalicorpmayoristas"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 3
-        versionName "1.0.2"
+        versionCode 7
+        versionName "1.0.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

@@ -16,6 +16,7 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.dataservicios.ttauditalicorpmayoristas.AndroidCustomGalleryActivity;
+import com.dataservicios.ttauditalicorpmayoristas.Model.Audit;
 import com.dataservicios.ttauditalicorpmayoristas.Model.PollDetail;
 import com.dataservicios.ttauditalicorpmayoristas.R;
 import com.dataservicios.ttauditalicorpmayoristas.SQLite.DatabaseHelper;
@@ -23,6 +24,8 @@ import com.dataservicios.ttauditalicorpmayoristas.util.AuditAlicorp;
 import com.dataservicios.ttauditalicorpmayoristas.util.GlobalConstant;
 import com.dataservicios.ttauditalicorpmayoristas.util.SessionManager;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -45,6 +48,8 @@ public class AceptoPremio extends Activity {
 
     private PollDetail mPollDetail;
     private EditText etComentario ;
+    private Audit mAudit;
+    private int rout_id;
 
 
 
@@ -61,11 +66,12 @@ public class AceptoPremio extends Activity {
         HashMap<String, String> user = session.getUserDetails();
 
         user_id = Integer.valueOf(user.get(SessionManager.KEY_ID_USER)) ;
-        poll_id = GlobalConstant.poll_id[8];
+        poll_id = GlobalConstant.poll_id[2];
+
+
         Bundle bundle = getIntent().getExtras();
-        store_id = bundle.getInt("store_id");
-
-
+        store_id = bundle.getInt("idPDV");
+        rout_id = bundle.getInt("rout_id");
 
 
 //        categoria = new Categoria();
@@ -182,10 +188,27 @@ public class AceptoPremio extends Activity {
         protected Boolean doInBackground(PollDetail... params) {
             // TODO Auto-generated method stub
 
-
             PollDetail mPD = params[0] ;
 
+            String time_close = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss").format(new Date());
+            mAudit = new Audit();
+            mAudit.setCompany_id(GlobalConstant.company_id);
+            mAudit.setStore_id(store_id);
+            mAudit.setId(GlobalConstant.audit_id[3]);
+            mAudit.setRoute_id(rout_id);
+            mAudit.setUser_id(user_id);
+            mAudit.setLatitude_close("");
+            mAudit.setLongitude_close("");
+            mAudit.setLatitude_open(String.valueOf(GlobalConstant.latitude_open));
+            mAudit.setLongitude_open(String.valueOf(GlobalConstant.longitude_open));
+            mAudit.setTime_open(GlobalConstant.inicio);
+            mAudit.setTime_close(time_close);
+
             if(!AuditAlicorp.insertPollDetail(mPD)) return false;
+
+            if(!AuditAlicorp.insertPollDetail(mPD)) return false;
+            if(!AuditAlicorp.closeAuditRoadStore(mAudit)) return false;
+            if(!AuditAlicorp.closeAuditRoadAll(mAudit)) return false;
 
             return true;
         }

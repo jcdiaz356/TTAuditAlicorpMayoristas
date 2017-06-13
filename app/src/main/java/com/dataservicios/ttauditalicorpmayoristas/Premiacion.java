@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.dataservicios.ttauditalicorpmayoristas.Model.Audit;
+import com.dataservicios.ttauditalicorpmayoristas.R;
 import com.dataservicios.ttauditalicorpmayoristas.SQLite.DatabaseHelper;
 
 import java.util.ArrayList;

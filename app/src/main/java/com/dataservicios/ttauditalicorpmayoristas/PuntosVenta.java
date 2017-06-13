@@ -169,7 +169,7 @@ public class PuntosVenta extends Activity {
         });
 
         listView = (ListView) findViewById(R.id.list);
-        adapter = new PdvsAdapter(this, pdvList);
+        adapter = new PdvsAdapter(this, pdvList,IdRuta);
 
         listView.setAdapter(adapter);
         // Click event for single list row
@@ -299,7 +299,7 @@ public class PuntosVenta extends Activity {
                         Intent intent = new Intent(MyActivity, StoreOpenClose.class);
                         intent.putExtras(argPDV);
                         startActivity(intent);
-                        finish();
+                        //finish();
                     }
                 }
             }
