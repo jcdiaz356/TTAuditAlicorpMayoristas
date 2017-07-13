@@ -11,15 +11,15 @@ public final class GlobalConstant {
     public static String inicio,fin;
     public static  double latitude_open, longitude_open;
     public static  int global_close_audit =0;
-    public static int company_id = 82;
+    public static int company_id = 89;
     // public static String albunName = "AlicorpPhoto";
     //public static String directory_images = "/Pictures/" + albunName;
     public static String directory_images = "/Pictures/" ;
     public static String type_aplication = "android";
     public static int[] poll_id = new int[]{
-        1388, //0 //Se encuentra Abierto el punto?             //1226, // 0	Existe Ventana?
-        1389, //1 //¿Cliente permitió tomar información?       //1227, // 1	Cumple Visibilidad?
-        1390, //2 //¿ Cliente Aceptó Premio ?                  //1228,  // 2	Encontro producto?
+        1509, //0 //Se encuentra Abierto el punto?             //1226, // 0	Existe Ventana?
+        1510, //1 //¿Cliente permitió tomar información?       //1227, // 1	Cumple Visibilidad?
+        1511, //2 //¿ Cliente Aceptó Premio ?                  //1228,  // 2	Encontro producto?
                                                             //1229, // 3	Cliente cumplio cuota?
                                                             //1230, // 4	Cliente acepto dar facturas?
                                                             //1231, // 5	¿ Cliente Aceptó firmar cargo de factura ?
