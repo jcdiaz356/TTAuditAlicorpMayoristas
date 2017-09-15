@@ -52,6 +52,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+
         ingresar = (Button) findViewById(R.id.btIngresar);
         etUsuario =   (EditText) findViewById(R.id.etUsuario);
         etPassword = (EditText) findViewById(R.id.etContrasena);
