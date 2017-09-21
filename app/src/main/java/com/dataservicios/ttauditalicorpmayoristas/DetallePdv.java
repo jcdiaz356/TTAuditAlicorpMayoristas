@@ -425,10 +425,10 @@ public class DetallePdv extends FragmentActivity {
                                     Integer audit_id ;
                                     audit_id = Integer.valueOf(idAuditoria);
                                     // Solo para auditorias diferente del id 4 y 14
-                                    if(typeBodega.equals("6D") && (audit_id == 41) ) {
-
-                                        break;
-                                    };
+//                                    if(typeBodega.equals("6D") && (audit_id == 41) ) {
+//
+//                                        break;
+//                                    };
 
                                     if( (audit_id != 4 ) && (audit_id != 42)  ){
                                             bt = new Button(MyActivity);
@@ -498,17 +498,17 @@ public class DetallePdv extends FragmentActivity {
                                                             startActivity(intent);
 
                                                             break;
-                                                        case 40:
+                                                        case 2:
                                                             intent = new Intent(MyActivity, PresenciaProducto.class);
                                                             intent.putExtras(argRuta);
                                                             startActivity(intent);
                                                             break;
 
-                                                        case 41:
-                                                            intent = new Intent(MyActivity, CategoriasCumpleCuotas.class);
-                                                            intent.putExtras(argRuta);
-                                                            startActivity(intent);
-                                                            break;
+//                                                        case 41:
+//                                                            intent = new Intent(MyActivity, CategoriasCumpleCuotas.class);
+//                                                            intent.putExtras(argRuta);
+//                                                            startActivity(intent);
+//                                                            break;
 
                                                     }
                                                 }

@@ -161,14 +161,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:tag="a"
-                            android:text="Cliente no recibe mercaderismo" />
+                            android:text="No se encontro el negocio" />
 
                         <RadioButton
                             android:id="@+id/rbB2"
                             android:layout_width="wrap_content"
                             android:tag="b"
                             android:layout_height="wrap_content"
-                            android:text="No estaba el encargado"
+                            android:text="No quiere participar"
                             android:enabled="true" />
 
                         <RadioButton
@@ -176,17 +176,15 @@
                             android:layout_width="wrap_content"
                             android:tag="c"
                             android:layout_height="wrap_content"
-                            android:text="Cliente no quiere programa de visibilidad"
+                            android:text="No estaba el encargado / estaba ocupado"
                             android:enabled="true" />
-
-
 
                         <RadioButton
                             android:id="@+id/rbD2"
                             android:layout_width="wrap_content"
-                            android:tag="c"
+                            android:tag="d"
                             android:layout_height="wrap_content"
-                            android:text="Otros" />
+                            android:text="Cambió dueño" />
 
                         <EditText
                             android:layout_width="fill_parent"

@@ -58,7 +58,7 @@ public class DetailPublicity extends Activity {
         publicity_id =  bundle.getInt("publicity_id");
         audit_id = bundle.getInt("audit_id");
         fechaRuta = bundle.getString("fechaRuta");
-        poll_id = GlobalConstant.poll_id[0];
+        poll_id = GlobalConstant.poll_id[3];
 
 
 

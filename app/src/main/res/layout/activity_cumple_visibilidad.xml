@@ -21,9 +21,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="¿ Existe  ventana o exhibidor ?"
+                android:text="¿ Cumple Visibilidad ?"
                 android:id="@+id/tvPregunta" />
         </LinearLayout>
+
+
 
         <LinearLayout
             android:orientation="horizontal"

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -15,8 +16,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dataservicios.ttauditalicorpmayoristas.MainActivity;
 import com.dataservicios.ttauditalicorpmayoristas.Model.PollDetail;
-import com.dataservicios.ttauditalicorpmayoristas.Model.Product;
+import com.dataservicios.ttauditalicorpmayoristas.Model.Publicity;
 import com.dataservicios.ttauditalicorpmayoristas.R;
 import com.dataservicios.ttauditalicorpmayoristas.SQLite.DatabaseHelper;
 import com.dataservicios.ttauditalicorpmayoristas.util.AuditAlicorp;
@@ -25,39 +27,29 @@ import com.dataservicios.ttauditalicorpmayoristas.util.SessionManager;
 
 import java.util.HashMap;
 
-/**
- * Created by Jaime on 27/10/2016.
- */
-
-public class ExisteProducto extends Activity {
-
+public class CumpleVisibilidadActivity extends Activity {
     private Activity MyActivity = this ;
-    private static final String LOG_TAG = ExisteProducto.class.getSimpleName();
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private SessionManager session;
     private Switch swExhibidorExiste ;
     private Button bt_guardar;
     private TextView tv_Pregunta;
     private String tipo,cadenaruc, fechaRuta;
-    private Integer user_id,store_id,rout_id,audit_id, product_id, poll_id, company_id ;
+    private Integer user_id,store_id,rout_id,audit_id, publicity_id, poll_id, company_id ;
     int  is_sino=0 ;
     private DatabaseHelper db;
     private ProgressDialog pDialog;
     private PollDetail mPollDetail;
-
-
-    Product product;
+    Publicity publicity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.producto_existe);
+        setContentView(R.layout.activity_cumple_visibilidad);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setTitle("Existe Producto");
+        getActionBar().setTitle("Visibilidad");
 
         swExhibidorExiste = (Switch) findViewById(R.id.swExhibidorExiste);
-
-
         // tv_Pregunta = (TextView) findViewById(R.id.tvPregunta);
         bt_guardar = (Button) findViewById(R.id.btGuardar);
 
@@ -66,15 +58,15 @@ public class ExisteProducto extends Activity {
         company_id = GlobalConstant.company_id;
         store_id = bundle.getInt("store_id");
         rout_id = bundle.getInt("rout_id");
-        product_id = bundle.getInt("product_id");
+        publicity_id = bundle.getInt("publicity_id");
         audit_id = bundle.getInt("audit_id");
         fechaRuta = bundle.getString("fechaRuta");
 
-        poll_id = GlobalConstant.poll_id[5]; // 0 "Existe Ventana?"
+        poll_id = GlobalConstant.poll_id[4]; // 0 "Existe Ventana?"
 
         db = new DatabaseHelper(getApplicationContext());
-        product = new Product();
-        product = db.getProduct(product_id);
+        publicity = new Publicity();
+        publicity = db.getPublicity(publicity_id);
 
         //poll_id = 72 , solo para exhibiciones de bayer, directo de la base de datos
 
@@ -88,26 +80,16 @@ public class ExisteProducto extends Activity {
         user_id = Integer.valueOf(user.get(SessionManager.KEY_ID_USER)) ;
 
 
-
-
-
-
         swExhibidorExiste.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     is_sino = 1;
-
                 } else {
                     is_sino = 0;
-
-
                 }
             }
         });
-
-
-
 
         bt_guardar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,9 +115,9 @@ public class ExisteProducto extends Activity {
                         mPollDetail.setLimite("0");
                         mPollDetail.setComentario("");
                         mPollDetail.setAuditor(user_id);
-                        mPollDetail.setProduct_id(product_id);
+                        mPollDetail.setProduct_id(0);
                         mPollDetail.setCategory_product_id(0);
-                        mPollDetail.setPublicity_id(0);
+                        mPollDetail.setPublicity_id(publicity_id);
                         mPollDetail.setCompany_id(GlobalConstant.company_id);
                         mPollDetail.setCommentOptions(0);
                         mPollDetail.setSelectdOptions("");
@@ -145,7 +127,6 @@ public class ExisteProducto extends Activity {
                         new loadPoll().execute(mPollDetail);
 
                         dialog.dismiss();
-
                     }
                 });
 
@@ -196,11 +177,27 @@ public class ExisteProducto extends Activity {
             // dismiss the dialog once product deleted
 
             if (result){
-                // loadLoginActivity();
 
-                product.setActive(0);
-                db.updateProduct(product);
+//              if(is_sino==1) {
+                Bundle argPDV = new Bundle();
+                argPDV.putInt("store_id", Integer.valueOf(store_id));
+                argPDV.putInt("rout_id", Integer.valueOf(rout_id));
+                argPDV.putInt("publicity_id", Integer.valueOf(publicity_id));
+                argPDV.putString("fechaRuta", fechaRuta);
+                argPDV.putInt("audit_id", audit_id);
+                //Intent intent = new Intent("com.dataservicios.ttauditalicorpmayoristas.DETAIPUBLICITY");
+                Intent intent = new Intent(MyActivity,DetailPublicity.class);
+                intent.putExtras(argPDV);
+                startActivity(intent);
+
                 finish();
+//                } else if(is_sino==0){
+//
+//                    publicity.setActive(0);
+//                    db.updatePublicity(publicity);
+//                    finish();
+//                }
+
 
 
             } else {
@@ -209,6 +206,7 @@ public class ExisteProducto extends Activity {
             hidepDialog();
         }
     }
+
 
 
 

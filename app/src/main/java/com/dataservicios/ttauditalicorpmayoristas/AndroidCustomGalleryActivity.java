@@ -135,9 +135,6 @@ public class AndroidCustomGalleryActivity extends Activity {
         btn_upload.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
-
-
-
                 File file= new File(Environment.getExternalStorageDirectory().toString()+"/Pictures/" + getAlbumName());
                 if (file.isDirectory()) {
 

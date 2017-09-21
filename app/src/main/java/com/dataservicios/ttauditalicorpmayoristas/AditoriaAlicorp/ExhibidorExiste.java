@@ -68,8 +68,6 @@ public class ExhibidorExiste extends Activity {
         getActionBar().setTitle("Existe Ventana o Exhibidor");
 
         swExhibidorExiste = (Switch) findViewById(R.id.swExhibidorExiste);
-
-
        // tv_Pregunta = (TextView) findViewById(R.id.tvPregunta);
         bt_guardar = (Button) findViewById(R.id.btGuardar);
 
@@ -82,7 +80,7 @@ public class ExhibidorExiste extends Activity {
         audit_id = bundle.getInt("audit_id");
         fechaRuta = bundle.getString("fechaRuta");
 
-        poll_id = GlobalConstant.poll_id[0]; // 0 "Existe Ventana?"
+        poll_id = GlobalConstant.poll_id[3]; // 0 "Existe Ventana?"
 
         db = new DatabaseHelper(getApplicationContext());
         publicity = new Publicity();
@@ -100,10 +98,6 @@ public class ExhibidorExiste extends Activity {
         user_id = Integer.valueOf(user.get(SessionManager.KEY_ID_USER)) ;
 
 
-
-
-
-
         swExhibidorExiste.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -117,9 +111,6 @@ public class ExhibidorExiste extends Activity {
                 }
             }
         });
-
-
-
 
         bt_guardar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -210,7 +201,7 @@ public class ExhibidorExiste extends Activity {
 
             if (result){
 
-//              if(is_sino==1) {
+              if(is_sino==1) {
                     Bundle argPDV = new Bundle();
                     argPDV.putInt("store_id", Integer.valueOf(store_id));
                     argPDV.putInt("rout_id", Integer.valueOf(rout_id));
@@ -218,17 +209,18 @@ public class ExhibidorExiste extends Activity {
                     argPDV.putString("fechaRuta", fechaRuta);
                     argPDV.putInt("audit_id", audit_id);
                     //Intent intent = new Intent("com.dataservicios.ttauditalicorpmayoristas.DETAIPUBLICITY");
-                    Intent intent = new Intent(MyActivity,DetailPublicity.class);
+                    //Intent intent = new Intent(MyActivity,DetailPublicity.class);
+                    Intent intent = new Intent(MyActivity,CumpleVisibilidadActivity.class);
                     intent.putExtras(argPDV);
                     startActivity(intent);
 
                     finish();
-//                } else if(is_sino==0){
-//
-//                    publicity.setActive(0);
-//                    db.updatePublicity(publicity);
-//                    finish();
-//                }
+                } else if(is_sino==0){
+
+                    publicity.setActive(0);
+                    db.updatePublicity(publicity);
+                    finish();
+                }
 
 
 

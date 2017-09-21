@@ -11,23 +11,20 @@ public final class GlobalConstant {
     public static String inicio,fin;
     public static  double latitude_open, longitude_open;
     public static  int global_close_audit =0;
-    public static int company_id = 101;
+    public static int company_id = 103;
     // public static String albunName = "AlicorpPhoto";
     //public static String directory_images = "/Pictures/" + albunName;
     public static String directory_images = "/Pictures/" ;
     public static String type_aplication = "android";
     public static int[] poll_id = new int[]{
-           1766, // 1615, // 1509, //0 //Se encuentra Abierto el punto?             //1226, // 0	Existe Ventana?
-           1767, // 1616, //1510, //1 //¿Cliente permitió tomar información?       //1227, // 1	Cumple Visibilidad?
-           1768, // 1617, //1511, //2 //¿ Cliente Aceptó Premio ?                  //1228,  // 2	Encontro producto?
-                                                            //1229, // 3	Cliente cumplio cuota?
-                                                            //1230, // 4	Cliente acepto dar facturas?
-                                                            //1231, // 5	¿ Cliente Aceptó firmar cargo de factura ?
-                                                            //1232, // 6	Se encuentra Abierto el punto?
-                                                            //1233, // 7	¿Cliente permitió tomar información?
-                                                            //1234, // 8	¿ Cliente Aceptó Premio ?
-} ;
+            1806, // 1766, // 0 //Se encuentra Abierto el punto?
+            1807, // 1767, // 1 //¿Cliente permitió tomar información?
+            1808, // 1768, // 2 //¿ Cliente Aceptó Premio ?
+            1809, // 1229, // 3	Existe Ventana?
+            1810, // 1230, // 4	Cumple Visibilidad?
+            1811, // 1231, // 5	Encontro producto?
 
+    } ;
     public static int[] audit_id = new int[]{
             39,	// 0 "Visibilidad Alicorp Mayoristas"
             40,	// 1 "Cumple MSL Alicorp Mayorista"

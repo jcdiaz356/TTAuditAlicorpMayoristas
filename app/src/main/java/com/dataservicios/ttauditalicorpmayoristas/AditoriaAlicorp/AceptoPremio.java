@@ -40,25 +40,21 @@ public class AceptoPremio extends Activity {
     private DatabaseHelper db ;
     private Activity MyActivity = this ;
     private String category_name,comentario;
-
     private ProgressDialog pDialog;
     private SessionManager session;
     private Switch swAceptoFactura;
     private int is_sino=0 ;
-
     private PollDetail mPollDetail;
     private EditText etComentario ;
     private Audit mAudit;
     private int rout_id;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acepto_premio);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setTitle("Facturas");
+        getActionBar().setTitle("Premiación");
 
         db = new DatabaseHelper(getApplicationContext());
 
@@ -68,15 +64,11 @@ public class AceptoPremio extends Activity {
         user_id = Integer.valueOf(user.get(SessionManager.KEY_ID_USER)) ;
         poll_id = GlobalConstant.poll_id[2];
 
-
         Bundle bundle = getIntent().getExtras();
-        store_id = bundle.getInt("idPDV");
+        store_id = bundle.getInt("store_id");
         rout_id = bundle.getInt("rout_id");
-
-
 //        categoria = new Categoria();
 //        categoria = db.getCategoria(categoria_id);
-
 
         //bt_photo = (Button) findViewById(R.id.btPhoto);
         btGuardar = (Button) findViewById(R.id.btGuardar);

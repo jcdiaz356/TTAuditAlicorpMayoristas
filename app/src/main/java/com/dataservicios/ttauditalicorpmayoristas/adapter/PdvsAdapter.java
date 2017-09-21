@@ -109,16 +109,16 @@ public class PdvsAdapter extends BaseAdapter {
 
         }
 
-//        if (m.getTypeBodega().equals("CONGLOMERADO") || m.getTypeBodega().equals("6D")  ){
-//
-//            bt_do.setVisibility(View.VISIBLE);
-//            bt_do.setEnabled(true);
-//
-//        } else {
-//            bt_do.setVisibility(View.INVISIBLE);
-//            bt_do.setEnabled(false);
-//        }
-        bt_do.setVisibility(View.INVISIBLE);
+        if (m.getTypeBodega().equals("CONGLOMERADO") || m.getTypeBodega().equals("6D")  ){
+
+            bt_do.setVisibility(View.VISIBLE);
+            bt_do.setEnabled(true);
+
+        } else {
+            bt_do.setVisibility(View.INVISIBLE);
+            bt_do.setEnabled(false);
+        }
+        //bt_do.setVisibility(View.INVISIBLE);
 
         bt_do.setOnClickListener(new View.OnClickListener() {
             @Override

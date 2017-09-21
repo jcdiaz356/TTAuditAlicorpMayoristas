@@ -165,11 +165,11 @@ public class StoreOpenClose extends Activity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     is_open = 1;
-                    bt_photo.setVisibility(View.INVISIBLE);
-                    bt_photo.setEnabled(false);
+//                    bt_photo.setVisibility(View.INVISIBLE);
+//                    bt_photo.setEnabled(false);
                     lyPermitio.setEnabled(false);
                     lyPermitio.setVisibility(View.VISIBLE);
-                    lyOpenClose.setVisibility(View.INVISIBLE);
+                    lyOpenClose.setVisibility(View.GONE);
                     lyOpenClose.setEnabled(false);
                     swPermitio.setChecked(false);
                     //clearRadioButtonCheck(radioButton1Array, false);
@@ -177,10 +177,10 @@ public class StoreOpenClose extends Activity {
                     is_permitio = 0;
                 } else {
                     is_open = 0;
-                    bt_photo.setVisibility(View.VISIBLE);
-                    bt_photo.setEnabled(true);
+//                    bt_photo.setVisibility(View.VISIBLE);
+//                    bt_photo.setEnabled(true);
                     lyPermitio.setEnabled(true);
-                    lyPermitio.setVisibility(View.INVISIBLE);
+                    lyPermitio.setVisibility(View.GONE);
                     lyOpenClose.setVisibility(View.VISIBLE);
                     lyOpenClose.setEnabled(true);
                     swPermitio.setChecked(false);
@@ -431,7 +431,8 @@ public class StoreOpenClose extends Activity {
                         Intent intent;
                         //intent = new Intent(MyActivity, Product.class);
                         //intent = new Intent(MyActivity, TipoDex.class);
-                        intent = new Intent(MyActivity, AceptoPremio.class);
+                        //intent = new Intent(MyActivity, AceptoPremio.class);
+                        intent = new Intent(MyActivity, DetallePdv.class);
                         intent.putExtras(argRuta);
                         startActivity(intent);
                         finish();
