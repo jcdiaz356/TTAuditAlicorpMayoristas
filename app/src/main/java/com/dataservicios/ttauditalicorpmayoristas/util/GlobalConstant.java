@@ -12,17 +12,16 @@ public final class GlobalConstant {
     public static  double latitude_open, longitude_open;
     public static  int global_close_audit =0;
    // public static int company_id = 106; // Alicorp Helena
-    public static int company_id = 115; // Triada
+    public static int company_id = 122; // Triada
     public static String directory_images = "/Pictures/" ;
     public static String type_aplication = "android";
     public static int[] poll_id = new int[]{
-           2006, // 1836,//1806, // 1766, // 0 //Se encuentra Abierto el punto?
-           2007, // 1837,//1807, // 1767, // 1 //¿Cliente permitió tomar información?
-           2008, // 1838,//1808, // 1768, // 2 //¿ Cliente Aceptó Premio ?
-           2009, // 0,   //1809, // 1229, // 3	Existe Ventana?
-           2010, // 0,   //1810, // 1230, // 4	Cumple Visibilidad?
-           2011, // 0,   //1811, // 1231, // 5	Encontro producto?
-
+           2122, // 2006, // 1836,//1806, // 1766, // 0 //Se encuentra Abierto el punto?
+           2123, // 2007, // 1837,//1807, // 1767, // 1 //¿Cliente permitió tomar información?
+           2124, // 2008, // 1838,//1808, // 1768, // 2 //¿ Cliente Aceptó Premio ?
+           2125, // 2009, // 0,   //1809, // 1229, // 3	Existe Ventana?
+           2126, // 2010, // 0,   //1810, // 1230, // 4	Cumple Visibilidad?
+           2127, // 2011, // 0,   //1811, // 1231, // 5	Encontro producto?
     } ;
     public static int[] audit_id = new int[]{
             39,	// 0 "Visibilidad Alicorp Mayoristas"
