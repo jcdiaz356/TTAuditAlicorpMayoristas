@@ -68,27 +68,27 @@ public class AuditAlicorp {
         if(!file.exists()){
             return true;
         }
-        Bitmap bbicon = null;
-        Bitmap scaledBitmap;
-        bbicon = BitmapLoader.loadBitmap(file.getAbsolutePath(),300,300);
+        Bitmap bitmap = null;
+        //Bitmap scaledBitmap;
+        bitmap = BitmapLoader.loadBitmap(file.getAbsolutePath(),450,450);
 
 //        if(Build.MODEL.equals("MotoG3")){
-//            scaledBitmap = FileImagenManager.rotateImage(FileImagenManager.scaleDown(bbicon, 450 , true),0);
+//            scaledBitmap = FileImagenManager.rotateImage(FileImagenManager.scaleDown(bitmap, 450 , true),0);
 //        } else {
-//            scaledBitmap = FileImagenManager.rotateImage(FileImagenManager.scaleDown(bbicon, 450 , true),90);
+//            scaledBitmap = FileImagenManager.rotateImage(FileImagenManager.scaleDown(bitmap, 450 , true),90);
 //        }
 
-        if(Build.MODEL.equals("MotoG3")){
-            //scaledBitmap = BitmapLoader.scaleDown() BitmapLoader.rotateImage(bbicon,0);
-            scaledBitmap = BitmapLoader.rotateImage(BitmapLoader.scaleDown(bbicon, 540 , true),0);
-        } else {
-            //scaledBitmap = BitmapLoader.rotateImage(bbicon,90);
-            scaledBitmap = BitmapLoader.rotateImage(BitmapLoader.scaleDown(bbicon, 540 , true),90);
-        }
+//        if(Build.MODEL.equals("MotoG3")){
+//            //scaledBitmap = BitmapLoader.scaleDown() BitmapLoader.rotateImage(bitmap,0);
+//            scaledBitmap = BitmapLoader.rotateImage(BitmapLoader.scaleDown(bitmap, 540 , true),0);
+//        } else {
+//            //scaledBitmap = BitmapLoader.rotateImage(bitmap,90);
+//            scaledBitmap = BitmapLoader.rotateImage(BitmapLoader.scaleDown(bitmap, 540 , true),90);
+//        }
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        scaledBitmap.compress(Bitmap.CompressFormat.JPEG,90, bos);
-        //bbicon.compress(Bitmap.CompressFormat.JPEG,100, bos);
+        //scaledBitmap.compress(Bitmap.CompressFormat.JPEG,90, bos);
+        bitmap.compress(Bitmap.CompressFormat.JPEG,80, bos);
 
         try {
             ContentBody foto = new ByteArrayBody(bos.toByteArray(), file.getName());

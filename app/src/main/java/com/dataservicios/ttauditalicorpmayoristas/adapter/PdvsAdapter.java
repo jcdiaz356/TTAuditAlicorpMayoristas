@@ -127,7 +127,7 @@ public class PdvsAdapter extends BaseAdapter {
                 Bundle argRuta = new Bundle();
                 argRuta.clear();
                 argRuta.putInt("store_id", m.getId());
-                argRuta.putInt("idRuta",idRuta);
+                argRuta.putInt("rout_id",idRuta);
 
                 Intent intent;
                 intent = new Intent(parent.getContext(), AceptoPremio.class);
