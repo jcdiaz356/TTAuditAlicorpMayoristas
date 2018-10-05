@@ -578,4 +578,61 @@ public class AuditAlicorp {
         return  user;
     }
 
+    public static boolean insertPollDetailAllProduct(PollDetail pollDetail) {
+
+        int success;
+        try {
+
+            HashMap<String, String> params = new HashMap<>();
+
+            params.put("poll_id"                , String.valueOf(pollDetail.getPoll_id()));
+            params.put("store_id"               , String.valueOf(pollDetail.getStore_id()));
+            params.put("sino"                   , String.valueOf(pollDetail.getSino()));
+            params.put("options"                , String.valueOf(pollDetail.getOptions()));
+            params.put("limits"                 , String.valueOf(pollDetail.getLimits()));
+            params.put("media"                  , String.valueOf(pollDetail.getMedia()));
+            params.put("coment"                 , String.valueOf(pollDetail.getComment()));
+            params.put("result"                 , String.valueOf(pollDetail.getResult()));
+            params.put("limite"                 , String.valueOf(pollDetail.getLimite()));
+            params.put("comentario"             , String.valueOf(pollDetail.getComentario()));
+            params.put("auditor"                , String.valueOf(pollDetail.getAuditor()));
+            params.put("product_id"             , String.valueOf(pollDetail.getProduct_id()));
+            params.put("publicity_id"           , String.valueOf(pollDetail.getPublicity_id()));
+            params.put("company_id"             , String.valueOf(pollDetail.getCompany_id()));
+            params.put("category_product_id"    , String.valueOf(pollDetail.getCategory_product_id()));
+            params.put("commentOptions"         , String.valueOf(pollDetail.getCommentOptions()));
+            params.put("selectedOptions"        , String.valueOf(pollDetail.getSelectdOptions()));
+            params.put("selectedOptionsComment" , String.valueOf(pollDetail.getSelectedOtionsComment()));
+            params.put("priority"               , String.valueOf(pollDetail.getPriority()));
+
+
+
+            JSONParserX jsonParser = new JSONParserX();
+            // getting product details by making HTTP request
+            //JSONObject json = jsonParser.makeHttpRequest(GlobalConstant.dominio + "/json/prueba.json" ,"POST", params);
+            JSONObject json = jsonParser.makeHttpRequest(GlobalConstant.dominio + "/savePollDetailsRegAllProduct" ,"POST", params);
+            // check your log for json response
+            Log.d("Login attempt", json.toString());
+            // json success, tag que retorna el json
+            if (json == null) {
+                Log.d("JSON result", "Está en nullo");
+                return false;
+            } else{
+                success = json.getInt("success");
+                if (success == 1) {
+                    Log.d(LOG_TAG, "Se insertó registro correctamente");
+                    // return true ;
+                }else{
+                    Log.d(LOG_TAG, "no insertó registro");
+                    // return json.getString("message");
+                    return false;
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true ;
+    }
 }

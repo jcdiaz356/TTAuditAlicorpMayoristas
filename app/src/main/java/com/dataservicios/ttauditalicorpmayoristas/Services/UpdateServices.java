@@ -11,13 +11,17 @@ import com.dataservicios.ttauditalicorpmayoristas.Model.Media;
 import com.dataservicios.ttauditalicorpmayoristas.Repositories.MediaRepo;
 import com.dataservicios.ttauditalicorpmayoristas.app.AppController;
 import com.dataservicios.ttauditalicorpmayoristas.util.AuditAlicorp;
+import com.dataservicios.ttauditalicorpmayoristas.util.BitmapLoader;
 import com.dataservicios.ttauditalicorpmayoristas.util.Connectivity;
+
+import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by Jaime on 25/08/2016.
  */
 public class UpdateServices extends Service {
-    private final String TAG = UpdateServices.class.getSimpleName();
+    private final String LOG_TAG = UpdateServices.class.getSimpleName();
     private final Integer contador = 0;
 
     private Context context = this;
@@ -30,8 +34,12 @@ public class UpdateServices extends Service {
     private AppController application;
 
     private MediaRepo mediaRepo;
-    private Media m;
+
     private AuditAlicorp auditAlicorp;
+
+    private Media media;
+    private ArrayList<Media> medias;
+    private File file;
 
 
     @Nullable
@@ -48,9 +56,9 @@ public class UpdateServices extends Service {
         application = (AppController) getApplication();
         updater = new Updater();
         mediaRepo = new MediaRepo(this);
-        m = new Media();
+        media = new Media();
         auditAlicorp = new AuditAlicorp(context);
-        Log.d(TAG, "onCreated");
+        Log.d(LOG_TAG, "onCreated");
     }
 
     @Override
@@ -62,7 +70,7 @@ public class UpdateServices extends Service {
         updater.interrupt();
         updater = null;
 
-        Log.d(TAG, "onDestroyed");
+        Log.d(LOG_TAG, "onDestroyed");
     }
 
     @Override
@@ -73,7 +81,7 @@ public class UpdateServices extends Service {
             updater.start();
         }
 
-        Log.d(TAG, "onStarted");
+        Log.d(LOG_TAG, "onStarted");
         return START_STICKY;
     }
 
@@ -88,7 +96,7 @@ public class UpdateServices extends Service {
 
             UpdateServices updaterService = UpdateServices.this;
             while (updaterService.runFlag) {
-                Log.d(TAG, "UpdaterThread running");
+                Log.d(LOG_TAG, "UpdaterThread running");
                 try{
 
 //                    int hour = Integer.valueOf(new SimpleDateFormat("k").format(new Date()));
@@ -97,29 +105,57 @@ public class UpdateServices extends Service {
                         if(Connectivity.isConnected(context)) {
                             if (Connectivity.isConnectedFast(context)) {
 
-                                Log.i(TAG," Connectivity fast" );
-                                m = mediaRepo.getFirstMedia();
-                                if(m.getId() != 0){
-                                    // Toast.makeText(context,"Segundo plano",Toast.LENGTH_SHORT);
-                                    boolean response = auditAlicorp.uploadMedia(m,1);
-                                    if (response) {
-                                        mediaRepo.deleteForId(m.getId());
-                                        Log.i(TAG," Send success images database server and delete local database and file " );
+//                                Log.i(LOG_TAG," Connectivity fast" );
+//                                m = mediaRepo.getFirstMedia();
+//                                if(m.getId() != 0){
+//                                    // Toast.makeText(context,"Segundo plano",Toast.LENGTH_SHORT);
+//                                    boolean response = auditAlicorp.uploadMedia(m,1);
+//                                    if (response) {
+//                                        mediaRepo.deleteForId(m.getId());
+//                                        Log.i(LOG_TAG," Send success images database server and delete local database and file " );
+//                                    }
+//                                } else {
+//                                    Log.i(LOG_TAG, "No found records in media table for send");
+//                                }
+
+                                media.setId(0);
+                                medias = (ArrayList<Media>) mediaRepo.getAllMedias();
+                                for (Media m: medias){
+                                    file = null;
+                                    file = new File(BitmapLoader.getAlbumDirTemp(context).getAbsolutePath() + "/" + m.getFile());
+                                    if(file.exists()){
+                                        media = m;
+                                        break;
                                     }
-                                } else {
-                                    Log.i(TAG, "No found records in media table for send");
+                                }
+//
+                                if (media.getId() != 0){
+                                    // NOTA eliminar  de "auditUtil.uploadMedia"
+                                    // la eliminación de archivos
+                                    //  file.delete() para controlar la eliminación en base de datos
+                                    boolean response = auditAlicorp.uploadMedia(media,1);
+                                    if (response) {
+                                        file = null;
+                                        file = new File(BitmapLoader.getAlbumDirTemp(context).getAbsolutePath() + "/" + media.getFile());
+                                        if(file.exists()){
+                                            file.delete();
+//                                            mediaRepo.delete(media);
+                                            mediaRepo.deleteForId(media.getId());
+                                        }
+                                        Log.i(LOG_TAG," Send success images database server and delete local database and file " );
+                                    }
                                 }
 
                             }else {
-                                Log.i(TAG," Connectivity slow" );
+                                Log.i(LOG_TAG," Connectivity slow" );
                             }
                         } else {
-                            Log.i(TAG," No internet connection" );
+                            Log.i(LOG_TAG," No internet connection" );
                         }
 
-//                        Log.i(TAG,"Se está enviando la foto " + String.valueOf(hour));
+//                        Log.i(LOG_TAG,"Se está enviando la foto " + String.valueOf(hour));
 //                    } else {
-//                        Log.i(TAG,"No se envía fuera del horario" + String.valueOf(hour));
+//                        Log.i(LOG_TAG,"No se envía fuera del horario" + String.valueOf(hour));
 //                    }
 
 

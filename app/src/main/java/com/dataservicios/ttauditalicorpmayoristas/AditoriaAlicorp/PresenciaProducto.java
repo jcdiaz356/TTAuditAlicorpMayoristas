@@ -4,28 +4,29 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.dataservicios.ttauditalicorpmayoristas.Model.PollDetail;
 import com.dataservicios.ttauditalicorpmayoristas.Model.Product;
 import com.dataservicios.ttauditalicorpmayoristas.R;
 import com.dataservicios.ttauditalicorpmayoristas.SQLite.DatabaseHelper;
-import com.dataservicios.ttauditalicorpmayoristas.adapter.ProductsAdapter;
 import com.dataservicios.ttauditalicorpmayoristas.app.AppController;
+import com.dataservicios.ttauditalicorpmayoristas.util.AuditAlicorp;
 import com.dataservicios.ttauditalicorpmayoristas.util.GlobalConstant;
 import com.dataservicios.ttauditalicorpmayoristas.util.JSONParserX;
 import com.dataservicios.ttauditalicorpmayoristas.util.SessionManager;
@@ -44,21 +45,26 @@ import java.util.List;
 public class PresenciaProducto extends Activity {
 
     private Activity MyActivity = this ;
+    private Activity activity = this ;
     private static final String LOG_TAG = PresenciaProducto.class.getSimpleName();
     private SessionManager session;
+    private CheckBox[] checkBoxArray;
+    private RadioGroup                      radioGroup;
+    private String selectedOptions = "";
+    private PollDetail pollDetail;
 
-
-    private ListView listView;
-    private ProductsAdapter adapter;
+//    private ListView listView;
+//    private ProductsAdapter adapter;
     private DatabaseHelper db;
+    private LinearLayout lyOptions;
 
     private ProgressDialog pDialog;
 
 
-    private List<Product> productList = new ArrayList<Product>();
+    private List<Product> products = new ArrayList<Product>();
     //private List<PresencePublicity> presencePubli = new ArrayList<PresencePublicity>();
 
-    private int store_id, rout_id, compay_id , audit_id,user_id ,  product_id;
+    private int store_id, rout_id, compay_id , audit_id,user_id ,  product_id,poll_id;
     private int  score = 0  ;
     private String fechaRuta,typeBodega ;
     private Button bt_guardar ;
@@ -71,9 +77,11 @@ public class PresenciaProducto extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle("Cumple MSL");
 
+        lyOptions = (LinearLayout) findViewById(R.id.lyOptions);
+
         db = new DatabaseHelper(getApplicationContext());
 
-
+        poll_id = GlobalConstant.poll_id[5]; // 0 "Existe Ventana?"
 
         bt_guardar = (Button) findViewById(R.id.btGuardar);
 
@@ -104,79 +112,81 @@ public class PresenciaProducto extends Activity {
 
 
 
-        listView = (ListView) findViewById(R.id.listProducto);
+//        listView = (ListView) findViewById(R.id.listProducto);
 
-        adapter = new ProductsAdapter(this, productList);
-        listView.setAdapter(adapter);
+//        adapter = new ProductsAdapter(this, productList);
+//        listView.setAdapter(adapter);
         Log.d(LOG_TAG, String.valueOf(db.getAllPublicity()));
 
-        List<Product> publi = db.getAllProducts();
+        products = db.getAllProducts();
 
-        Log.d(LOG_TAG, String.valueOf(publi));
-        for(int i = 0; i < publi.size(); i++){
+       // Log.d(LOG_TAG, String.valueOf(publi));
+//        for(int i = 0; i < publi.size(); i++){
 
-            Product m = new Product();
-            m.setId(publi.get(i).getId());
-            m.setName(publi.get(i).getName());
-            m.setActive(publi.get(i).getActive());
-            m.setImage(publi.get(i).getImage());
-            m.setCategory_name(publi.get(i).getCategory_name());
-            m.setCategory_id(publi.get(i).getCategory_id());
-            productList.add(m);
-        }
-
-
-        adapter.notifyDataSetChanged();
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//            Product m = new Product();
+//            m.setId(publi.get(i).getId());
+//            m.setName(publi.get(i).getName());
+//            m.setActive(publi.get(i).getActive());
+//            m.setImage(publi.get(i).getImage());
+//            m.setCategory_name(publi.get(i).getCategory_name());
+//            m.setCategory_id(publi.get(i).getCategory_id());
+//            productList.add(m);
+//        }
 
 
-                product_id = Integer.valueOf(((TextView) view.findViewById(R.id.tvId)).getText().toString());
+//        adapter.notifyDataSetChanged();
+//
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//
+//                product_id = Integer.valueOf(((TextView) view.findViewById(R.id.tvId)).getText().toString());
+//
+//
+//                Product p = new Product();
+//                p=db.getProduct(product_id);
+//
+//                Toast toast = Toast.makeText(getApplicationContext(), String.valueOf(product_id), Toast.LENGTH_SHORT);
+//                toast.show();
+//
+//                Bundle argPDV = new Bundle();
+//                argPDV.putInt("store_id", Integer.valueOf(store_id));
+//                argPDV.putInt("rout_id", Integer.valueOf(rout_id));
+//                argPDV.putInt("product_id", Integer.valueOf(product_id));
+//                argPDV.putString("fechaRuta", fechaRuta);
+//                argPDV.putInt("audit_id", audit_id);
+//                //Intent intent = new Intent("com.dataservicios.ttauditalicorpmayoristas.DETAIPUBLICITY");
+//                Intent intent = new Intent(MyActivity,ExisteProducto.class);
+//                intent.putExtras(argPDV);
+//                startActivity(intent);
+//
+//
+//
+//
+//            }
+//        });
 
 
-                Product p = new Product();
-                p=db.getProduct(product_id);
-
-                Toast toast = Toast.makeText(getApplicationContext(), String.valueOf(product_id), Toast.LENGTH_SHORT);
-                toast.show();
-
-                Bundle argPDV = new Bundle();
-                argPDV.putInt("store_id", Integer.valueOf(store_id));
-                argPDV.putInt("rout_id", Integer.valueOf(rout_id));
-                argPDV.putInt("product_id", Integer.valueOf(product_id));
-                argPDV.putString("fechaRuta", fechaRuta);
-                argPDV.putInt("audit_id", audit_id);
-                //Intent intent = new Intent("com.dataservicios.ttauditalicorpmayoristas.DETAIPUBLICITY");
-                Intent intent = new Intent(MyActivity,ExisteProducto.class);
-                intent.putExtras(argPDV);
-                startActivity(intent);
-
-
-
-
-            }
-        });
+        loadCotrolProducts();
 
         bt_guardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                selectedOptions = "";
+                int valueChecked = 0;
+                if(checkBoxArray != null) {
 
-                int totalItems=listView.getAdapter().getCount();
-                String[] items = new String[totalItems];
-                for(int i = 0; i < totalItems; i++){
-                    items[i] = listView.getAdapter().getItem(i).toString();
-                    Product p =  new Product();
-                    p = (Product) adapter.getItem(i);
-
-                    if(p.getActive()==1) {
-
-                        String nombre = p.getName();
-                        Toast.makeText(MyActivity,"Está pendiente para auditar " + nombre , Toast.LENGTH_LONG).show();
-                        return;
+                    for(CheckBox r: checkBoxArray) {
+                        if(r.isChecked()){ valueChecked = 1 ;  } else { valueChecked = 0 ;};
+                        selectedOptions += r.getTag().toString() + "-" + String.valueOf(valueChecked) + "|";
+                       // counterSelected ++;
                     }
+//                    if(counterSelected==0){
+//                        Toast.makeText(activity, R.string.message_select_options, Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
                 }
 
 
@@ -190,6 +200,29 @@ public class PresenciaProducto extends Activity {
                     public void onClick(DialogInterface dialog, int which)
                     {
 
+
+//                        Toast.makeText(activity, selectedOptions , Toast.LENGTH_SHORT).show();
+
+                        pollDetail = new PollDetail();
+                        pollDetail.setPoll_id(poll_id);
+                        pollDetail.setStore_id(store_id);
+                        pollDetail.setSino(1);
+                        pollDetail.setOptions(0);
+                        pollDetail.setLimits(0);
+                        pollDetail.setMedia(0);
+                        pollDetail.setComment(0);
+                        pollDetail.setResult(0);
+                        pollDetail.setLimite("0");
+                        pollDetail.setComentario(selectedOptions);
+                        pollDetail.setAuditor(user_id);
+                        pollDetail.setProduct_id(0);
+                        pollDetail.setCategory_product_id(0);
+                        pollDetail.setPublicity_id(0);
+                        pollDetail.setCompany_id(GlobalConstant.company_id);
+                        pollDetail.setCommentOptions(0);
+                        pollDetail.setSelectdOptions("");
+                        pollDetail.setSelectedOtionsComment("");
+                        pollDetail.setPriority("0");
 
                         new loadPoll().execute();
                         dialog.dismiss();
@@ -229,6 +262,7 @@ public class PresenciaProducto extends Activity {
             // TODO Auto-generated method stub
 
 
+            if(!AuditAlicorp.insertPollDetailAllProduct(pollDetail)) return false;
             if(!closeAudit(store_id,audit_id, rout_id)) return false ;
 
 
@@ -420,4 +454,42 @@ public class PresenciaProducto extends Activity {
 //
 //        overridePendingTransition(R.anim.anim_slide_in_right,R.anim.anim_slide_out_right);
     }
+
+    private void loadCotrolProducts(){
+
+        products = db.getAllProducts();
+
+        //ArrayList<Distributor> distributors =
+
+
+        lyOptions.removeAllViews();
+
+
+        if(products.size() > 0) {
+            checkBoxArray = new CheckBox[products.size()];
+
+            int counter =0;
+
+            for(Product p: products){
+                checkBoxArray[counter] = new CheckBox(activity);
+                checkBoxArray[counter].setText(p.getName().toString());
+                checkBoxArray[counter].setTag(String.valueOf(p.getId()));
+//                    if(po.getComment()==1) {
+                checkBoxArray[counter].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+
+
+                    }
+                });
+
+                lyOptions.addView(checkBoxArray[counter]);
+                counter ++;
+            }
+           // lyOptions.addView(radioGroup);
+
+        }
+    }
+
 }
